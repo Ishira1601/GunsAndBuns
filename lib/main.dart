@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'workout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -116,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(padding:  const EdgeInsets.all(8.0)),
             TextButton(onPressed: () {
               debugPrint("New Workout");
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const Workout()));
               }, 
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
