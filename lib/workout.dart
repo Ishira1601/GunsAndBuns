@@ -9,6 +9,8 @@ class Workout extends StatefulWidget {
 }
 
 class _WorkoutState extends State<Workout> {
+  final List<ExerciseData> _exercises = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,20 +23,51 @@ class _WorkoutState extends State<Workout> {
         // the App.build method, and use it to set our appbar title.
         title: const Text("Workout"),
       ),
-      body: 
-      Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Your workout:',
-            ),
-            Exercise(nSets: 3, nReps: 10, weight: 20.0),
-          ],
+      body: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Your workout:'),
+              const SizedBox(height: 8),
+              if (_exercises.isEmpty)
+                const Text('No exercises yet.')
+              else
+                ..._exercises.map((e) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(e.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Exercise(nSets: e.sets, nReps: e.reps, weight: e.weight),
+                        const SizedBox(height: 12),
+                      ],
+                    )),
+            ],
+          ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          addExercise();
+        },
+        tooltip: 'Add Exercise',
+        child: const Icon(Icons.add),
+      )
     );
   }
+
+  void addExercise() {
+    debugPrint("Add Exercise");
+    showDialog(context: context, builder: (context) {
+      return NewExerciseDialog(onSubmit: (name, nSets, nReps, weight) {
+        debugPrint("New Exercise: $name – $nSets sets, $nReps reps, $weight kg");
+        setState(() {
+          _exercises.add(ExerciseData(name, nSets, nReps, weight));
+        });
+        Navigator.of(context).pop();
+      });
+    });
+  }
 }
+
+
